@@ -1,0 +1,61 @@
+{% load static %}
+<div class="nav-header"style="background-color: #007A64" >
+    <a href="index.html" class="brand-logo">
+        <img class="logo-abbr" src="{% static 'assets/logo.jpg' %}" alt="">
+        <img class="logo-compact" src="{% static 'assets/logo.jpg' %}" alt="">
+        <img class="brand-title" src="{% static 'assets/logo.jpg' %}" alt="">
+    </a>
+
+    <div class="nav-control">
+        <div class="hamburger">
+            <span class="line"></span><span class="line"></span><span class="line"></span>
+        </div>
+    </div>
+</div>
+<div class="deznav" style="background-color: #007A64;">
+    <hr style="border-color: beige;">
+    <div class="deznav-scroll">
+        <ul class="metismenu" id="menu">
+      
+           
+            <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                <img width="32" height="32" src="https://img.icons8.com/external-coco-line-kalash/32/external-case-marketing-and-digital-marketing-coco-line-kalash.png" alt="external-case-marketing-and-digital-marketing-coco-line-kalash" />
+                      &nbsp;
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                &nbsp; 
+                <span class="nav-text" style=" color: white !important;"> Assigned Case</span>
+            </a>
+            <ul aria-expanded="false">
+                <li><a href="{% url 'view_assigned_case' %}" style=" color: white !important;">Add Case Details</a></li>
+                <li><a href="{% url 'case_all_list' %}" style=" color: white !important;">Assigned Case List</a></li>
+                <!-- <li><a href="i{% url 'view_case' %}l" style=" color: white !important;">View Officers</a></li> -->
+               
+            </ul>
+
+            <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                <img width="32" height="32" src="https://img.icons8.com/ios-filled/50/000000/brave-ai.png" alt="external-case-marketing-and-digital-marketing-coco-line-kalash"/>
+                      &nbsp;
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                &nbsp; 
+                <span class="nav-text" style=" color: white !important;">AI Agents</span>
+            </a>
+            <ul aria-expanded="false">
+                <li><a href="{% url 'chatbot' %}" style=" color: white !important;">AI Case Agent</a></li>
+                <li><a href="{% url 'chatbot_view' %}" style=" color: white !important;">AI PDF Agent</a></li>
+               
+               
+            </ul>
+        </li>
+        
+       
+          
+        
+        </ul>
+        
+       
+    </div>
+</div>

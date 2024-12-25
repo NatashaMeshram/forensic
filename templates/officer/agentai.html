@@ -1,0 +1,551 @@
+{% extends 'officerincludes/base.html' %}
+{% load static %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<style>
+    body {
+    overflow: hidden !important;
+    height: 100%; /* Ensure full height */
+    width: 100%; /* Ensure full width */
+}
+    .messages-box {
+      flex: 1;
+      height: 50%;
+      overflow-y: auto;
+    }
+  
+    .messages-list {
+      padding-left: 0;
+    }
+  
+    .message {
+      margin-bottom: 15px;
+      list-style: none;
+    }
+  
+    .message-text {
+      padding: 10px;
+      border-radius: 5px;
+    }
+  
+    .sent {
+      background-color: #dcf8c6;
+      align-self: flex-end;
+    }
+  
+    .received {
+      background-color: #f1f0f0;
+      align-self: flex-start;
+    }
+  
+    .message-form {
+      display: flex;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 10px;
+      background-color: #f8f9fa;
+    }
+  
+    .message-input {
+      flex: 1;
+      border-radius: 0;
+      border-right: none;
+    }
+  
+    .btn-send {
+      border-radius: 0;
+    }
+  
+    .chat-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+  </style>
+  
+{% block content %}
+<div style=" overflow: hidden; !important">
+  
+  <div class="content-body" style=" overflow: hidden; !important">
+      <!-- row -->
+  
+  <!-- Modal -->
+  <div id="uploadModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+  
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">File upload form</h4>
+        </div>
+        <div class="modal-body">
+          <!-- Form -->
+          <form method='post' action="{% url 'pdfChatUpload' %}" enctype="multipart/form-data">
+              {% csrf_token %}
+  
+            Select file : <input type='file' name='pdf_file' id='file' class='form-control' ><br>
+            <input type='submit' class='btn btn-info' value='Upload' id='btn_upload'>
+          </form>
+  
+          <!-- Preview-->
+          <div id='preview'></div>
+        </div>
+   
+      </div>
+  
+    </div>
+  </div>
+  <br><br>
+  
+              <div class="chat-container " >
+                  <div class="card flex-grow-1">
+                    <div class="card-header bg-primary text-white">PDF Agent AI Chat</div>
+               
+                    <div class="card-body messages-box scroll" style="
+                      height: 400px;
+              overflow-x: hidden;
+              overflow-y: auto;
+              text-align: justify;"
+              id="messages-container">
+                
+                      <ul class="list-unstyled messages-list">
+                
+                        <!-- <li class="message received">
+                          <div class="message-text">
+                            <div class="message-sender">
+                              <b>AI Chatbot</b>
+                            </div>
+                            <div class="message-content">
+                              Hi {{user.username}}, I am your AI Chatbot, you can ask me anything.
+                            </div>
+                          </div>
+                        </li> -->
+                
+                
+                        {% for chat in chats %}
+                        {% if chat.user == request.user %}
+                
+                
+                        <li class="message sent" style="">
+                          <div class="message-text">
+                            <div style="padding-left: 10px;padding-right: 10px;">
+                              <div class="message-sender">
+                                <b>You</b>
+                              </div>
+                              <div class="message-content">
+                                {{chat.message}}
+                               
+                              </div>
+                            </div>
+                            
+                          </div>
+                        </li>
+                
+                        <li class="message received">
+                          <div class="message-text">
+                            <div style="padding-left: 10px;padding-right: 10px;">
+                            <div class="message-sender">
+                              <b>PDF Agent AI Chatbot</b>
+                            </div>
+                            <div class="message-content">
+                              {{chat.response}}
+                              <button class="btn btn-sm btn-primary copy-button" data-text="{{ chat.response }}"><i class="fas fa-copy"></i></button>
+
+                            </div>
+                          </div>
+                          </div>
+                        </li>
+                
+                        {% endif %}
+                        {% endfor %}
+                
+                      </ul>
+                      <style>
+                        
+                        .sent .message-text {
+                background-color: #dcf8c6;
+                align-self: flex-end;
+                margin: 20px;
+                width: 30%;
+                border-radius: 50px; 
+                padding: 10px;
+  
+              }
+              
+              .received .message-text {
+        border-radius: 10%;
+          background-color: #f1f0f0;
+          align-self: flex-start;
+          border-radius: 50px; 
+          padding: 10px;
+  
+  
+      }
+  
+  
+                          /* Chat loading animation with vertical dots */
+                          .chat-loading {
+                              display: flex;
+                         
+                              height: 20px; /* Adjust height as needed */
+                          }
+                      
+                          .chat-loading .dot {
+                              width: 10px; /* Adjust dot size as needed */
+                              height: 10px; /* Adjust dot size as needed */
+                              border-radius: 50%;
+                              background-color: #007bff; /* Adjust dot color as needed */
+                              margin: 5px; /* Adjust space between dots as needed */
+                              animation: chat-loading-animation 1.5s infinite ease-in-out;
+                          }
+                      
+                          .chat-loading .dot:nth-child(2) {
+                              animation-delay: 0.3s;
+                          }
+                      
+                          .chat-loading .dot:nth-child(3) {
+                              animation-delay: 0.6s;
+                          }
+                      
+                          .chat-loading .dot:nth-child(4) {
+                              animation-delay: 0.9s;
+                          }
+                      
+                          .chat-loading .dot:nth-child(5) {
+                              animation-delay: 1.2s;
+                          }
+                      
+                          @keyframes chat-loading-animation {
+                              0%, 100% {
+                                  transform: translateY(0);
+                              }
+                              50% {
+                                  transform: translateY(-20px); /* Adjust dot movement distance as needed */
+                              }
+                          }
+                          .chat-bubble {
+  background-color:#E6F8F1;
+  padding:16px 28px;
+  -webkit-border-radius: 20px;
+  -webkit-border-bottom-left-radius: 2px;
+  -moz-border-radius: 20px;
+  -moz-border-radius-bottomleft: 2px;
+  border-radius: 20px;
+  border-bottom-left-radius: 2px;
+  display:inline-block;
+  padding-bottom: 30px;
+}
+.typing {
+  align-items: center;
+  display: flex;
+  height: 17px;
+}
+.typing .dot {
+  animation: mercuryTypingAnimation 1.8s infinite ease-in-out;
+  background-color: #6CAD96 ; 
+  border-radius: 50%;
+  height: 7px;
+  margin-right: 4px;
+  vertical-align: middle;
+  width: 7px;
+  display: inline-block;
+  
+}
+
+.typing .dot:nth-child(1) {
+  animation-delay: 200ms;
+}
+.typing .dot:nth-child(2) {
+  animation-delay: 300ms;
+}
+.typing .dot:nth-child(3) {
+  animation-delay: 400ms;
+}
+.typing .dot:last-child {
+  margin-right: 0;
+}
+
+@keyframes mercuryTypingAnimation {
+  0% {
+    transform: translateY(0px);
+    background-color:#6CAD96; 
+  }
+  28% {
+    transform: translateY(-7px);
+    background-color:#9ECAB9; 
+  }
+  44% {
+    transform: translateY(0px);
+    background-color: #B5D9CB; 
+  }
+}
+                      </style>
+                      <div class="loadinganimation">
+  
+                          <br><br>
+                          <div class="chat-bubble chat-loading">
+                            <div class="typing">
+                              <div class="dot"></div>
+                              <div class="dot"></div>
+                              <div class="dot"></div>
+                            </div>
+                            </div>
+                         
+                      </div>
+                      
+                      <!-- HTML structure for the loading animation -->
+                      
+                      
+                    </div>
+                  
+                  </div>
+                  <form class="message-form" method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+                    
+                      <div class="form-row mt-12">
+                        
+                          <div class="col-md-4">
+                              <div class="form-group">
+                                  <select id="selectFile"  class="form-control" data-role="select-dropdown" data-profile="minimal">
+                                    <option value="">Select Case</option>
+                                    {% for i in cases %}
+                                    <option value="{{i.case_for.id}}">{{i.case_for.id}}</option>
+                                      {%  endfor %}
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  <select id="selectLanguage" class="form-control" data-role="select-dropdown" data-profile="minimal">
+                                    <option value="">Select Help</option>
+                                      <option value="Summarize">Summarize the case</option>
+                                      <option value="Advice">Advice fo case</option>
+                                  </select>
+                              </div>
+                         
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                      
+                              <button type="submit" class="btn btn-primary btn-send">Send</button>
+                            </div>
+                          </div>
+                      </div>
+                  </form>
+                  
+                </div>
+                
+             <!-- CSS -->
+  <style>
+   .typing-animation {
+    overflow: hidden;
+    margin-right: .15em;
+    animation: typing-animation 1s steps(10, end) infinite;
+}
+
+@keyframes typing-animation {
+    from { width: 0; }
+}
+  </style>
+  
+  <!-- JavaScript -->
+  <script>
+    // JavaScript to control the typing animation
+    document.addEventListener('DOMContentLoaded', function() {
+        // Function to start the typing animation
+        function startTyping(typingSpan, textToType) {
+            // Delay before starting the typing animation (in milliseconds)
+            const startDelay = 75;
+            // Delay between each character typing (in milliseconds)
+            const typingDelay = 20;
+            // Variable to keep track of the current index of the text to type
+            let currentIndex = 0;
+  
+            setTimeout(function() {
+                typeCharacter();
+            }, startDelay);
+  
+            // Function to type each character
+            function typeCharacter() {
+                // Append the next character to the typing span
+                typingSpan.textContent += textToType[currentIndex];
+                // Move to the next character in the text
+                currentIndex++;
+                // Check if all characters have been typed
+                if (currentIndex < textToType.length) {
+                    // If not, schedule typing the next character
+                    setTimeout(typeCharacter, typingDelay);
+                }
+            }
+        }
+  
+        const messagesList = document.querySelector('.messages-list');
+        const messageForm = document.querySelector('.message-form');
+        const selectFile = document.getElementById('selectFile');
+        const selectLanguage = document.getElementById('selectLanguage');
+        const loadingAnimation = document.querySelector('.loadinganimation');
+        const messagesContainer = document.getElementById('messages-container');
+  
+        messageForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+  
+            const formData = new FormData();
+            formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+            formData.append('selectedFile', selectFile.value); // Append the selected file option
+            formData.append('selectedLanguage', selectLanguage.value); // Append the selected language option
+        
+            // Show loading animation
+            loadingAnimation.style.display = 'block';
+  
+            // Create the user's message item
+            const userMessageItem = document.createElement('li');
+            userMessageItem.classList.add('message', 'sent');
+            userMessageItem.innerHTML = `
+                <div class="message-text">
+                    <div style="padding-left: 10px;padding-right: 10px;">
+                        <div class="message-sender">
+                            <b>You</b>
+                        </div>
+                        <div class="message-content">
+                       ${selectLanguage.value}  for   ${selectFile.value}
+                        </div>
+                    </div>
+                </div>`;
+            messagesList.appendChild(userMessageItem);
+            messagesContainer.scrollTo({
+                top: messagesContainer.scrollHeight,
+                behavior: 'instant'
+            });
+  
+            fetch('', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const response = data.response;
+                const messageItem = document.createElement('li');
+                messageItem.classList.add('message', 'received');
+                const messageText = document.createElement('div');
+                messageText.classList.add('message-text');
+                const messageContent = document.createElement('div');
+                messageContent.style = "padding-left: 10px;           word-wrap: break-word;  padding-right: 10px;";
+                const messageSender = document.createElement('div');
+                const messageSender1 = document.createElement('div');
+                messageSender.innerHTML = "<b>PDF Agent AI Chatbot</b>";
+                messageSender1.innerHTML="<button class='btn btn-sm btn-primary copy-button' data-text='${response}'><i class='fas fa-copy'></i></button>"
+
+               
+                const typingSpan = document.createElement('span');
+                typingSpan.classList.add('typing-animation');
+                messageContent.appendChild(messageSender);
+                messageContent.appendChild(typingSpan);
+                messageText.appendChild(messageContent);
+                messageItem.appendChild(messageText);
+                messagesList.appendChild(messageItem);
+  
+                // Start the typing animation
+                startTyping(typingSpan, response);
+
+                messageContent.appendChild(messageSender1);
+                // Hide loading animation
+                loadingAnimation.style.display = 'none';
+
+                // Scroll to the bottom of the messages container
+                messagesContainer.scrollTo({
+                    top: messagesContainer.scrollHeight,
+                    behavior: 'instant'
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Hide loading animation on error
+                loadingAnimation.style.display = 'none';
+            });
+
+            // Clear input fields
+            messageInput.value = '';
+            selectFile.value = '';
+        });
+  
+        // Scroll the messages box to the bottom by default
+        messagesContainer.scrollTo({
+            top: messagesContainer.scrollHeight,
+            behavior: 'instant'
+        });
+    });
+  </script>
+  
+              
+              
+          </div>
+
+</div>
+
+
+{% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<script>
+                            document.querySelector('.loadinganimation').style.display = 'none';
+
+     const messagesContainer = document.getElementById('messages-container');
+        // Use smooth behavior for scrolling
+        messagesContainer.scrollTo({
+            top: messagesContainer.scrollHeight,
+            behavior: 'instant'
+        });
+</script>
+
+<script>
+    
+    // Scroll the messages box to the bottom by default
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const messagesContainer = document.getElementById('messages-container');
+        // Use smooth behavior for scrolling
+        messagesContainer.scrollTo({
+            top: messagesContainer.scrollHeight,
+            behavior: 'instant'
+        });
+    });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      // Function to handle copying text
+      function copyText(text) {
+          // Create a textarea element to hold the text temporarily
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+      }
+
+      // Add event listeners to copy buttons
+      const copyButtons = document.querySelectorAll('.copy-button');
+      copyButtons.forEach(function(button) {
+          button.addEventListener('click', function() {
+              const textToCopy = this.getAttribute('data-text');
+              copyText(textToCopy);
+              alert('Text copied to clipboard!');
+          });
+      });
+  });
+</script>
+
+{% endblock content %}

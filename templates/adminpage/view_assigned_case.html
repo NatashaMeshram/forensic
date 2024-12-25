@@ -1,0 +1,86 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="content-body">
+    <!-- row -->
+    <div class="container-fluid">
+        {% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+       
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">View Assigned Cases</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-responsive-md">
+                            <thead>
+                                <tr>
+                                   
+                                    <th><strong>Case Title</strong></th>
+                                    <th><strong>Assigned Officer</strong></th>
+                                  
+                                    <th><strong>Action</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if cases %}
+                                {% for i in cases %}
+                                <tr>
+                                   
+                                   
+                                   
+                                    <td>{{i.case.case_title}}	</td>
+                                    <td>{{i.officer.first_name}}	</td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter{{i.id}}">
+                                               Unassigned
+                                              </button>
+
+                                            <div class="modal fade" id="exampleModalCenter{{i.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle{{i.id}}" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                  <div class="modal-content">
+                                                    <div class="modal-header">
+                                                      <h5 class="modal-title" id="exampleModalLongTitle">Case</h5>
+                                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                      </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                      Are you sure to Unassigned Case!
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                      <button type="button" class="btn btn-danger"><a href="{% url 'edit_assigned_case' i.id %}" style="color: white;"> Unassigned </a> </button>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</div>
+
+
+{% endblock content %}

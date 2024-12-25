@@ -1,0 +1,51 @@
+{% extends 'officerincludes/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="content-body">
+    <!-- row -->
+    <div class="container-fluid">
+        <div class="col-xl-12 col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Update Device Info</h4>
+                </div>
+                <div class="card-body">
+                    <div class="basic-form">
+                        <form class="user-form" method="POST" enctype="multipart/form-data" action="{% url 'device_update' case_id %}">
+                            {% csrf_token %}
+                            <input type="text" name="case_id" value="{{case_id}}" style="visibility: hidden;" id="">
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    {{form.as_p}}
+                                </div>
+                            </div>
+                        
+          
+                            <div class="form-group row" style="float: right;">
+                                <div class="col-sm-12">
+                                    <button type="submit" class="btn btn-primary">Add Case</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</div>
+{% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+
+{% endblock content %}

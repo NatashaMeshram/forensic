@@ -1,0 +1,94 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="content-body">
+    <!-- row -->
+    <div class="container-fluid">
+        {% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+       
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">View Cases</h4>
+                    <div>
+                        <form class="form" action="{%  url 'case_search'  %}" method="get">
+                        <div class="input-group mb-3">
+                                {% csrf_token %}
+
+                            <input type="text" class="form-control" name="search_text" placeholder="Search Case by Case Name"  aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                              <button class="btn btn-outline-secondary" type="submit">Search</button>
+
+                            </div>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-responsive-md">
+                            <thead>
+                                <tr>
+                                   
+                                    <th><strong>Case Id</strong></th>
+                                    <th><strong>Case Title</strong></th>
+                                  
+                                    <th><strong>Action</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if cases %}
+                                {% for i in cases %}
+                                <tr>
+                                   
+                                   
+                                   
+                                    <td>{{i.id}}	</td>
+                                    <td>{{i.case_title}}	</td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <!-- <a href="table-bootstrap-basic.html#" class="btn btn-primary shadow btn-xs sharp me-1"><i class="fa fa-pencil"></i></a> -->
+                                            <a href="{% url 'delete_case' i.id %}" class="btn btn-danger shadow btn-xs sharp"><i class="fa fa-trash"></i></a>
+                                        </div>
+                                    </td>
+                                    {% if i.case_closed_admin %}
+                                    <td>
+                                        <a class="btn btn-warning" href="{% url 'case_open_by_admin' i.id  %}">Open Case</a>
+                                    </td>
+                                    {% else %}
+                                    <td>
+                                        <a class="btn btn-danger" href="{% url 'case_close_by_admin' i.id  %}">Close Case</a>
+                                    </td>
+                                    {% endif %}
+                                </tr>
+
+                            {% endfor %}
+                         <tr>
+                            {% else %}
+                            <td style="color: black; font-size: 20px;">
+                                  Not Found
+                            </td>
+                         </tr>
+                            {% endif %}
+                            
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</div>
+
+
+{% endblock content %}

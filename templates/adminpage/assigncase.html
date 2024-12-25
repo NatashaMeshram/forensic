@@ -1,0 +1,63 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="content-body" >
+    <!-- row -->
+    <div class="container-fluid">
+        <div class="col-xl-12 col-lg-12">
+            <div class="card" style="box-shadow: 300px !important; border: 3px !important; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+                <div class="card-header">
+                    <h4 class="card-title">Assign Case</h4>
+                </div>
+                <div class="card-body">
+                    <div class="basic-form">
+                        <form class="user-form" method="POST" action="{% url 'assign_case' %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label>Select Case</label>
+                                <select name="case_id" class="form-control default-select" id="sel1">
+                                    {% for i in cases %}
+                                    <option value="{{i.id}}">{{i.case_title}}</option>
+                              
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Select Offcier</label>
+                                <select name="officer_email" class="form-control default-select" id="sel1">
+                                    {% for i in officer %}
+                                    <option value="{{i.id}}">{{i.first_name}}
+
+                                    </option>
+                              
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group row" style="float: right;">
+                                <div class="col-sm-12">
+                                    <button type="submit" class="btn btn-primary">Assign Case</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</div>
+{% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+
+{% endblock content %}

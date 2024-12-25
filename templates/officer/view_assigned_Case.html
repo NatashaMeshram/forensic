@@ -1,0 +1,95 @@
+{% extends 'officerincludes/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="content-body">
+    <!-- row -->
+    <div class="container-fluid">
+        {% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+       
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Add Case Details</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-responsive-md">
+                            <thead>
+                                <tr>
+                                   
+                                    <th><strong>Case Id</strong></th>
+                                    <th><strong>Case  Title</strong></th>
+                                    <th><strong>Add Case Details</strong></th>
+                                    <th><strong>Add Customer Details</strong></th>
+                                    <th><strong>Add Device Details</strong></th>
+                                    <th><strong>Add Evidence Details</strong></th>
+                                    <th><strong>Case Open/Close</strong></th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if cases %}
+                                {% for i in cases %}
+                                <tr>
+                                   
+                                    <td><div class="d-flex align-items-center"><img src="images/avatar/1.jpg" class="rounded-lg me-2" width="24" alt=""> <span class="w-space-no">{{i.id}}</span></div></td>
+                                    <td><div class="d-flex align-items-center"><img src="images/avatar/1.jpg" class="rounded-lg me-2" width="24" alt=""> <span class="w-space-no" style="color: black;"><b>{{i.case.case_title}}</b></span></div></td>
+                                    {% if i.case.case_saved_info == True %}
+
+                                    <td><a class="btn btn-primary" href="{% url 'update_case_info' i.case.id  %}">Update Case Info</a></td>
+                                    {% else %}
+                                    <td><a class="btn btn-primary" href="{% url 'add_case_info' i.case.id  %}">Add Case Info</a></td>
+
+                                    {% endif %}
+
+
+                                    <div></div>
+                                    {% if i.case.person_saved_info == True %}
+
+                                    <td><a class="btn btn-primary" href="{% url 'update_person_info' i.case.id %}">Update Client Info</a></td>
+                                    {% else %}
+                                    <td><a class="btn btn-primary" href="{% url 'add_case_details' i.case.id %}">  Add Client Info</a></td>
+                                    {% endif %}
+                               
+                                    <td>  <a class="btn btn-primary" href="{% url 'device_list_case' i.case.id %}">Add Device</a></td>
+                            
+                                    
+                                        <td>
+                                            <a class="btn btn-primary" href="{% url 'file_list' i.case.id  %}">Add Evidence</a>
+                                        </td>
+
+                                        {% if i.case.case_closed_officer %}
+                                        <td>
+                                            <a class="btn btn-warning" href="{% url 'case_open' i.case.id  %}">Open Case</a>
+                                        </td>
+                                        {% else %}
+                                        <td>
+                                            <a class="btn btn-danger" href="{% url 'case_close' i.case.id  %}">Close Case</a>
+                                        </td>
+                                        {% endif %}
+                                    
+
+                                </tr>
+                            {% endfor %}
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</div>
+
+
+{% endblock content %}

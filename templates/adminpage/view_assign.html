@@ -1,0 +1,63 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="content-body">
+    <!-- row -->
+    <div class="container-fluid">
+        {% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+       
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Update Assigned Case Officers</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-responsive-md">
+                            <thead>
+                                <tr>
+                                   
+                                    <th><strong>Case Id</strong></th>
+                                    <th><strong>Case  Title</strong></th>
+                                    <th><strong>Case Assigned Officer</strong></th>
+                                    <th><strong>Action</strong></th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if cases %}
+                                {% for i in cases %}
+                                <tr>
+                                   
+                                    <td><div class="d-flex align-items-center"><img src="images/avatar/1.jpg" class="rounded-lg me-2" width="24" alt=""> <span class="w-space-no">{{i.id}}</span></div></td>
+                                    <td><div class="d-flex align-items-center"><img src="images/avatar/1.jpg" class="rounded-lg me-2" width="24" alt=""> <span class="w-space-no">{{i.case_title}}</span></div></td>
+                                    <td>{{i.case_officer.username}}</td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <a href="table-bootstrap-basic.html#" class="btn btn-primary shadow btn-xs sharp me-1"><i class="fa fa-pencil"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</div>
+
+
+{% endblock content %}

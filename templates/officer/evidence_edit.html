@@ -1,0 +1,104 @@
+<!-- fileupload/templates/fileupload/upload_file.html -->
+{% extends 'officerincludes/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="content-body">
+    <!-- row -->
+    <div class="container">
+<div class="col-xl-12 col-lg-12">
+    <input type="hidden" id="caseIdInput" value="{{ case_id }}">
+
+
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Edit Evidence id {{eve_detail.id}}</h4>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data" action="{% url 'evidence_edit'  eve_detail.id %}">
+                {% csrf_token %}
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Evidence Name </label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" value="{{eve_detail.evidence_name}}" name="eve_name" required placeholder="Evidence Name">
+                    </div>
+                </div>  
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Description</label>
+                    <div class="col-sm-9">
+                        <textarea name="eve_des"   class="form-control" id="" cols="30" rows="10">{{eve_detail.description}}</textarea>
+                    </div>
+                </div>  
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Evidence acquired Date and Time</label>
+                    <div class="col-sm-9">
+                        <input type="datetime-local" value='{{ eve_detail.date_acquired|date:"Y-m-d H:i"  }}' class="form-control" name="eve_date" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Evidence Files</label>
+                    <div class="col-sm-9" id="fileListContainer">
+                        {% for j in eve_files %}
+                         <a href="{{j.file.url}}">   <span>{{j.file_name}}</span></a>
+                            <span>
+                                {{j.id}}
+                                <a href="#" class="btn btn-primary shadow btn-xs sharp me-1 delete-file-btn" data-file-id="{{ j.id }}"><i class="fa fa-trash"></i></a>
+                            </span>
+
+
+                        {% endfor  %}
+                        <br>
+                    </div>
+                </div>
+                <div class="mb-3">
+
+                    <label for="formFileMultiple" class="form-label">Upload Multiple Files</label>
+                    <input class="form-control" type="file" name="file" id="fileInput" multiple>
+                </div>
+                <input type="hidden" name="case_id" value="{{ case_id }}">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+
+<!-- ... (your existing HTML code) ... -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // AJAX for file deletion
+        $(".delete-file-btn").click(function (e) {
+            e.preventDefault();
+            var fileId = $(this).data("file-id");
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'delete_file'  %}  ",
+                data: {
+                    'file_id': fileId,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    // Include any other parameters you need to send
+                },
+                dataType: "json",
+                success: function (data) {
+                    if (data.success) {
+                        // Remove the deleted file entry from the UI
+                        $("#fileListContainer").find('[data-file-id="' + fileId + '"]').parent().remove();
+                        window.location.reload();
+                    } else {
+                        alert("Error: " + data.error);
+                    }
+                },
+                error: function () {
+                    alert("An error occurred during the AJAX request");
+                },
+            });
+        });
+    });
+</script>
+<!-- ... (your existing HTML code) ... -->
+
+
+{% endblock content %}

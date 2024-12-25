@@ -1,0 +1,192 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      .chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px; /* Adjust the height as needed */
+    width: 80%; /* Adjust the width as needed */
+    margin: auto; /* Center the container horizontally */
+}
+
+#caseChart {
+    max-width: 100%; /* Ensure the chart fits inside the container */
+    max-height: 100%; /* Ensure the chart fits inside the container */
+}
+
+    </style>
+<div class="content-body">
+    <!-- row -->
+    <div class="container-fluid">
+    <h1>Dashboard</h1>
+    <div class="chart-container"> <!-- Container for the chart -->
+      <canvas id="caseChart"></canvas>
+      
+    </div>
+    <canvas id="assignmentChart"  width=""></canvas>
+    <!-- <canvas id="caseStatusBreakdownChart" width="400" height="400"></canvas> -->
+    <canvas id="caseStatusChart" width="400" height="400"></canvas>
+
+      <script src="{% static 'js/chart_script.js' %}"></script>
+</div>
+</div>
+{% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+<script>
+$(document).ready(function() {
+    $.ajax({
+        url: '{% url "case_distribution_by_type" %}',  // Replace 'case_distribution' with the name of your URL pattern
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            // Extract data for labels and counts
+            var labels = Object.keys(data);
+            var counts = Object.values(data);
+
+            // Create chart using Chart.js
+            var ctx = document.getElementById('caseChart').getContext('2d');
+            var chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Number of Cases',
+                        data: counts,
+                        backgroundColor: 'skyblue'
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    });
+});
+
+</script>
+
+<script>
+  // Fetch data from Django view
+  fetch('{% url "case_assignment_chart_data" %}')
+  .then(response => response.json())
+            .then(data => {
+                // Create Chart.js chart
+                var ctx = document.getElementById('assignmentChart').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Number of Cases Assigned',
+                            data: data.values,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+                });
+            });
+</script>
+
+
+<script>
+  // Fetch data from Django view
+  fetch('{% url "case_status_breakdown_chart_data" %}')
+      .then(response => response.json())
+      .then(data => {
+          // Create Chart.js chart
+          var ctx = document.getElementById('caseStatusBreakdownChart').getContext('2d');
+          var myChart = new Chart(ctx, {
+              type: 'pie',
+              data: {
+                  labels: data.labels,
+                  datasets: [{
+                      data: data.values,
+                      backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)'],
+                      borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+                      borderWidth: 1
+                  }]
+              },
+              options: {
+                  responsive: true,
+                  maintainAspectRatio: false // Allow custom size
+              }
+          });
+      });
+</script>
+
+
+<script>
+  $(document).ready(function() {
+    $.ajax({
+        url: '{% url "case_status_breakdown" %}',
+        type: 'GET',
+        success: function(response) {
+            // Render chart using Chart.js
+            renderChart(response);
+        },
+        error: function(xhr, errmsg, err) {
+            console.log(xhr.status + ": " + xhr.responseText); // Log any errors
+        }
+    });
+});
+
+function renderChart(data) {
+    var ctx = document.getElementById('caseStatusChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: data.labels,
+            datasets: [{
+                label: 'Case Status',
+                data: data.data,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+      options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+    });
+}
+</script>
+{% endblock content %}

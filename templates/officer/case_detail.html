@@ -1,0 +1,276 @@
+
+
+{% extends 'officerincludes/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    hr.new2 {
+  border-top: 3px dashed black;
+}
+</style>
+<div class="content-body">
+    <!-- row -->
+    <div class="container-fluid">
+        <div class="col-xl-12 col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="">Case Details</h4>
+                </div>
+                <div class="card-body">
+                    <div class="basic-form" >
+                        <form class="user-form" >
+                            {% csrf_token %}
+                            <input type="text" name="case_id" value="{{case_id}}" style="visibility: hidden;" id="">
+                            <div  class="form-group row">
+                                <div   class="col-xl-12 col-lg-12">
+                                   
+                                        <div class="card-header">
+                                            <h4 class="card-title">Case Information</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="basic-form" style="border: 2px solid; padding: 30px;">
+                                                <form>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Problem Description</b>  </label><br>
+                                                        <Label class="form" rows="8" id="comment">{{case_info.problem_statement|safe}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Case Type :</b> </label>
+                                                        <Label class="form" rows="8" id="comment"> {{case_info.case_type}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Case Incident Date and Time :</b> </label>
+                                                        <Label class="form" rows="8" id="comment">{{case_info.date_time_incident}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Case Incident Location :</b> </label>
+                                                        <Label class="form" rows="8" id="comment">{{case_info.location_of_incident}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Reporting Party Name :</b> </label>
+                                                        <Label class="form" rows="8" id="comment">{{case_info.reporting_party_name}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Reporting Party Contact :</b> </label>
+                                                        <Label class="form" rows="8" id="comment">{{case_info.reporting_party_contact}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Reporting Party Affilation :</b> </label>
+                                                        <Label class="form" rows="8" id="comment">{{case_info.reporting_party_affiliation}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Summary of Case</b>  </label><br>
+                                                        <Label class="form" rows="8" id="comment">{{case_info.summary_of_the_case|safe}} </Label>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                
+                                </div>
+                            </div>
+                        
+                     
+                        </form>
+                    </div>
+                    <div class="basic-form">
+                        <form class="user-form" >
+                            <input type="text" name="case_id" value="{{case_id}}" style="visibility: hidden;" id="">
+                            <div class="form-group row">
+                                <div class="col-xl-12 col-lg-12">
+                                   
+                                        <div class="card-header">
+                                            <h4 class="card-title">Client Information</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="basic-form" style="border: 2px solid; padding: 30px;">
+                                                <form>
+                                                   
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Client Name :</b> </label>
+                                                        <Label class="form" rows="8" id="comment"> {{person_info.full_name}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Client Date of Birth:</b> </label>
+                                                        <Label class="form" rows="8" id="comment">{{person_info.date_of_birth}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Client Gender :</b> </label>
+                                                        <Label class="form" rows="8" id="comment">{{person_info.gender}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Client Address :</b> </label>
+                                                        <Label class="form" rows="8" id="comment">{{person_info.current_address}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Client Phone Number :</b> </label>
+                                                        <Label class="form" rows="8" id="comment">{{person_info.phone_numbers}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Client Email :</b> </label>
+                                                        <Label class="form" rows="8" id="comment">{{person_info.email_address}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Client Photo :</b> </label>
+                                                        <img src="{{person_info.photograph.url}}" alt="">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Client Government Id Type :</b> </label>
+                                                        <Label class="form" rows="8" id="comment">{{person_info.government_id_type}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Client Government Id Number :</b> </label>
+                                                        <Label class="form" rows="8" id="comment">{{person_info.government_id_number}} </Label>
+                                                    </div>
+                                                  
+                                                    
+                                                </form>
+                                            </div>
+                                        </div>
+                                
+                                </div>
+                            </div>
+                        
+                     
+                        </form>
+                    </div>
+
+
+                    <div class="basic-form">
+                        <form class="user-form" >
+                            <input type="text" name="case_id" value="{{case_id}}" style="visibility: hidden;" id="">
+                            <div class="form-group row">
+                                <div class="col-xl-12 col-lg-12">
+                                   
+                                        <div class="card-header">
+                                            <h4 class="card-title">Evidence Information</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="basic-form" style="border: 2px solid; padding: 30px;">
+                                                {% if  evidence_list %}
+                                                <form>
+                                                    {%  for i in evidence_list  %}
+                                                   <h3>Evidence Id {{i.id}}</h3>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Evidence Name :</b> </label>
+                                                        <Label class="form" rows="8" id="comment"> {{i.evidence_name}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Evidence Description :</b> </label>
+                                                        <Label class="form" rows="8" id="comment">{{i.description}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Evidence Date of Acquired :</b> </label>
+                                                        <Label class="form" rows="8" id="comment">{{i.date_acquired}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Evidence Document :</b> </label>
+                                                        {% for j in evidence_file  %}
+                                                        {% if j.evidence.id == i.id %}
+                                                        <a href="{{j.file.url}}">   <span>{{j.file_name}}</span></a>
+                                                           <span>
+                                                               {{j.id}}
+                                                               <a href="#" class="btn btn-primary shadow btn-xs sharp me-1 delete-file-btn" data-file-id="{{ j.id }}"><i class="fa fa-trash"></i></a>
+                                                           </span>
+                                                           {% endif %}
+                               
+                                                       {% endfor  %}
+                                                    </div>
+                                                    <hr class="new2">
+                                                    {% endfor %}
+                                                </form>
+                                                {% else %}
+                                                <div>
+                                                    <p>
+                                                        No Evidence Collected
+                                                    </p>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                
+                                </div>
+                            </div>
+                        
+                     
+                        </form>
+                    </div>
+
+                    <div class="basic-form">
+                        <form class="user-form" >
+                            <input type="text" name="case_id" value="{{case_id}}" style="visibility: hidden;" id="">
+                            <div class="form-group row">
+                                <div class="col-xl-12 col-lg-12">
+                                   
+                                        <div class="card-header">
+                                            <h4 class="card-title">Collected Device Information</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="basic-form" style="border: 2px solid; padding: 30px;">
+                                                {% if device_list %}
+                                                <form>
+                                                    {%  for i in device_list  %}
+                                                   <h3  style="border-bottom: 2px solid;">Device Id {{i.id}}</h3>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Device Name :</b> </label>
+                                                        <Label class="form" rows="8" id="comment"> {{i.device_type}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Make and Model :</b> </label>
+                                                        <Label class="form" rows="8" id="comment">{{i.make_and_model}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Device Serial Number:</b> </label>
+                                                        <Label class="form" rows="8" id="comment">{{i.serial_number_imei}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Device Operating System:</b> </label>
+                                                        <Label class="form" rows="8" id="comment">{{i.operating_system}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Device Storage Capacity:</b> </label>
+                                                        <Label class="form" rows="8" id="comment">{{i.storage_capacity}} </Label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for=""> <b>Device Password Credentials:</b> </label>
+                                                        <Label class="form" rows="8" id="comment">{{i.passwords_credentials}} </Label>
+                                                    </div>
+                                                   
+                                                    <hr class="new2">
+                                                    {% endfor %}
+                                                </form>
+                                                {% else %}
+
+                                                <div>
+                                                    <p>No Device Collected</p>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                
+                                </div>
+                            </div>
+                        
+                     
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</div>
+{% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+
+{% endblock content %}
